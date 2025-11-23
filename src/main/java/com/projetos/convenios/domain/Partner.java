@@ -1,9 +1,6 @@
 package com.projetos.convenios.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +17,9 @@ public class Partner {
     private String name;
     private String cpf;
     private String phone;
-    private Boolean holder;
-    private Long holderId;
+    private Boolean isHolder;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "holder_id") // nome da coluna no banco
+    private Partner holder;
 }

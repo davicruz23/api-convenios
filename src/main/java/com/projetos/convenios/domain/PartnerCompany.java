@@ -18,7 +18,7 @@ public class PartnerCompany {
     private String cnpj;
     private String phone;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "partnerCompany", cascade = CascadeType.ALL)
     private Address address;
 
     private Integer discountMax;

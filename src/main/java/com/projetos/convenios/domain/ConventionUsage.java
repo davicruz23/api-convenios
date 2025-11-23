@@ -16,7 +16,7 @@ public class ConventionUsage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDateTime useDate;
+    private LocalDateTime usedAt;
     private Integer discountApplied;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -1,9 +1,9 @@
 package com.projetos.convenios.repository;
 
-import com.projetos.convenios.domain.ConventionUsage;
+import com.projetos.convenios.domain.AgreementCard;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ConventionUsageRepository extends JpaRepository<ConventionUsage, Long> {
+public interface AgreementCardRepository extends JpaRepository<AgreementCard,Long> {
 }

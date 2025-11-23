@@ -21,5 +21,6 @@ public class Address {
     private String state;
 
     @OneToOne
+    @JoinColumn(name = "partner_company_id")
     private PartnerCompany partnerCompany;
 }
