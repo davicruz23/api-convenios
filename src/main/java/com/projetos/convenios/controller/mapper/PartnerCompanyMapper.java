@@ -18,6 +18,7 @@ public class PartnerCompanyMapper {
                 .name(src.getName())
                 .cnpj(src.getCnpj())
                 .phone(src.getPhone())
+                .maxDiscount(src.getDiscountMax())
                 .address(AddressMapper.mapper(src.getAddress()))
                 .build();
     }
