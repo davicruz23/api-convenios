@@ -1,6 +1,7 @@
 package com.projetos.convenios.service;
 
 import com.projetos.convenios.domain.Partner;
+import com.projetos.convenios.domain.dto.partner.HolderWithPartnersDTO;
 import com.projetos.convenios.domain.dto.partner.PartnerRequestDTO;
 import com.projetos.convenios.repository.PartnerRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,14 @@ public class PartnerService {
 
     public List<Partner> findAll() {
         return repository.findAll();
+    }
+
+    public Partner findById(Long id) {
+        return repository.findById(id).orElse(null);
+    }
+
+    public List<Partner> findByHolder(Partner holder) {
+        return repository.findByHolder(holder);
     }
 
     public Partner createHolder(PartnerRequestDTO dto) {
@@ -54,6 +63,30 @@ public class PartnerService {
 
         return repository.save(dependent);
     }
+
+    public HolderWithPartnersDTO findHolderWithDependents(Long holderId) {
+
+        Partner holder = repository.findById(holderId)
+                .orElseThrow(() -> new RuntimeException("Holder not found"));
+
+        if (!Boolean.TRUE.equals(holder.getIsHolder())) {
+            throw new RuntimeException("Partner is not a holder");
+        }
+
+        List<Partner> dependents = repository.findByHolderId(holderId);
+
+        List<String> dependentNames = dependents.stream()
+                .map(Partner::getName)
+                .toList();
+
+        return HolderWithPartnersDTO.builder()
+                .holderId(holderId)
+                .phoneHolder(holder.getPhone())
+                .holderName(holder.getName())
+                .dependents(dependentNames)
+                .build();
+    }
+
 
     public List<Partner> findDependents(Long holderId) {
         return repository.findByHolderId(holderId);

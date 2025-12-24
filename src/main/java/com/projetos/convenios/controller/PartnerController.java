@@ -3,6 +3,7 @@ package com.projetos.convenios.controller;
 import com.projetos.convenios.controller.mapper.PartnerCompanyMapper;
 import com.projetos.convenios.controller.mapper.PartnerMapper;
 import com.projetos.convenios.domain.Partner;
+import com.projetos.convenios.domain.dto.partner.HolderWithPartnersDTO;
 import com.projetos.convenios.domain.dto.partner.PartnerRequestDTO;
 import com.projetos.convenios.domain.dto.partner.PartnerResponseDTO;
 import com.projetos.convenios.domain.dto.partnerCompany.PartnerCompanyRequestDTO;
@@ -30,6 +31,11 @@ public class PartnerController {
                         .stream()
                         .map(PartnerMapper::mapper)
                         .toList());
+    }
+
+    @GetMapping("/{holderId}/grouped-dependents")
+    public ResponseEntity<HolderWithPartnersDTO> findGroupedDependents(@PathVariable Long holderId) {
+        return ResponseEntity.ok(service.findHolderWithDependents(holderId));
     }
 
     @PostMapping("/createHolder")
