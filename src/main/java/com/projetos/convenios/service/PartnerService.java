@@ -1,5 +1,6 @@
 package com.projetos.convenios.service;
 
+import com.projetos.convenios.domain.Address;
 import com.projetos.convenios.domain.Partner;
 import com.projetos.convenios.domain.dto.partner.HolderWithPartnersDTO;
 import com.projetos.convenios.domain.dto.partner.PartnerRequestDTO;
@@ -29,12 +30,21 @@ public class PartnerService {
 
     public Partner createHolder(PartnerRequestDTO dto) {
 
+        Address address = new Address();
+        address.setStreet(dto.getAddress().getStreet());
+        address.setHouseNumber(dto.getAddress().getHouseNumber());
+        address.setCity(dto.getAddress().getCity());
+        address.setState(dto.getAddress().getState());
+        address.setZip(dto.getAddress().getZip());
+        address.setCountry(dto.getAddress().getCountry());
+
         Partner holder = new Partner();
         holder.setName(dto.getName());
         holder.setCpf(dto.getCpf());
         holder.setPhone(dto.getPhone());
         holder.setIsHolder(true);
         holder.setHolder(null);
+        holder.setAddress(address);
 
         return repository.save(holder);
     }
@@ -54,12 +64,21 @@ public class PartnerService {
             throw new RuntimeException("Titular com máximo de dependentes (4)");
         }
 
+        Address address = new Address();
+        address.setStreet(dto.getAddress().getStreet());
+        address.setHouseNumber(dto.getAddress().getHouseNumber());
+        address.setCity(dto.getAddress().getCity());
+        address.setState(dto.getAddress().getState());
+        address.setZip(dto.getAddress().getZip());
+        address.setCountry(dto.getAddress().getCountry());
+
         Partner dependent = new Partner();
         dependent.setName(dto.getName());
         dependent.setCpf(dto.getCpf());
         dependent.setPhone(dto.getPhone());
         dependent.setIsHolder(false);
         dependent.setHolder(holder);
+        dependent.setAddress(address);
 
         return repository.save(dependent);
     }

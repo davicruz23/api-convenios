@@ -19,6 +19,7 @@ public class PartnerCompanyService {
 
         Address address = new Address();
         address.setStreet(dto.getAddress().getStreet());
+        address.setHouseNumber(dto.getAddress().getHouseNumber());
         address.setCity(dto.getAddress().getCity());
         address.setState(dto.getAddress().getState());
         address.setZip(dto.getAddress().getZip());
@@ -30,8 +31,6 @@ public class PartnerCompanyService {
         entity.setPhone(dto.getPhone());
         entity.setDiscountMax(dto.getMaxDiscount());
         entity.setAddress(address);
-
-        address.setPartnerCompany(entity);
 
         return repository.save(entity);
     }

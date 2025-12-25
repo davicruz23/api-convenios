@@ -14,12 +14,17 @@ public class Partner {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
     private String cpf;
     private String phone;
     private Boolean isHolder;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "holder_id") // nome da coluna no banco
+    @JoinColumn(name = "holder_id")
     private Partner holder;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id") // FK AQUI
+    private Address address;
 }

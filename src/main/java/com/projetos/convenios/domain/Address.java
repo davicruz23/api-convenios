@@ -14,13 +14,11 @@ public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String city;
     private String street;
+    private String houseNumber;
     private String zip;
     private String country;
     private String state;
-
-    @OneToOne
-    @JoinColumn(name = "partner_company_id")
-    private PartnerCompany partnerCompany;
 }

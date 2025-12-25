@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class AddressDTO {
     private String city;
     private String street;
+    private String houseNumber;
     private String zip;
     private String country;
     private String state;
