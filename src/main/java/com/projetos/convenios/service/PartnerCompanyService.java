@@ -39,4 +39,8 @@ public class PartnerCompanyService {
         return repository.findAll();
 
     }
+
+    public  PartnerCompany findById(Long id) {
+        return repository.findById(id).orElse(null);
+    }
 }

@@ -8,6 +8,7 @@ public class AddressMapper {
         return AddressDTO.builder()
                 .city(src.getCity())
                 .street(src.getStreet())
+                .houseNumber(src.getHouseNumber())
                 .zip(src.getZip())
                 .country(src.getCountry())
                 .state(src.getState())
