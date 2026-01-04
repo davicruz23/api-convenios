@@ -37,10 +37,13 @@ public class PartnerCompanyService {
 
     public List<PartnerCompany> findAll() {
         return repository.findAll();
-
     }
 
     public  PartnerCompany findById(Long id) {
         return repository.findById(id).orElse(null);
+    }
+
+    public void delete(Long id) {
+        repository.deleteById(id);
     }
 }

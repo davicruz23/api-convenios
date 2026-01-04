@@ -35,4 +35,10 @@ public class PartnerCompanyController {
                 .fromCurrentRequest().path("/{id}").buildAndExpand(service.create(dto).getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<PartnerCompanyResponseDTO> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }

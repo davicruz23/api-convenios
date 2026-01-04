@@ -19,10 +19,10 @@ public class ConventionUsage {
     private LocalDateTime usedAt;
     private Integer discountApplied;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,  cascade = CascadeType.ALL)
     private Partner partner;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,  cascade = CascadeType.ALL)
     private PartnerCompany partnerCompany;
 
 }

@@ -110,4 +110,8 @@ public class PartnerService {
     public List<Partner> findDependents(Long holderId) {
         return repository.findByHolderId(holderId);
     }
+
+    public void delete(Long id) {
+        repository.deleteById(id);
+    }
 }
