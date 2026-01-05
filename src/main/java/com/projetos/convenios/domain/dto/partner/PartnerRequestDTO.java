@@ -16,6 +16,5 @@ public class PartnerRequestDTO {
     private String name;
     private String cpf;
     private String phone;
-    private Boolean isHolder;
     private AddressDTO address;
 }

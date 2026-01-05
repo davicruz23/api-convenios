@@ -33,27 +33,33 @@ public class PartnerController {
                         .toList());
     }
 
+    @GetMapping("/getHolders")
+    public ResponseEntity<List<PartnerResponseDTO>> findAllHolders() {
+        return ResponseEntity.ok()
+                .body(service.findByIsHolderTrue()
+                        .stream()
+                        .map(PartnerMapper::mapper)
+                        .toList());
+    }
+
     @GetMapping("/{holderId}/grouped-dependents")
     public ResponseEntity<HolderWithPartnersDTO> findGroupedDependents(@PathVariable Long holderId) {
         return ResponseEntity.ok(service.findHolderWithDependents(holderId));
     }
 
     @PostMapping("/createHolder")
-    public ResponseEntity<PartnerRequestDTO> createHolder(@RequestBody PartnerRequestDTO dto) {
-        URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest().path("/{id}").buildAndExpand(service.createHolder(dto).getId()).toUri();
-        return ResponseEntity.created(uri).build();
+    public ResponseEntity<Long> createHolder(@RequestBody PartnerRequestDTO dto) {
+        Partner holder = service.createHolder(dto);
+        return ResponseEntity.ok(holder.getId());
     }
 
     @PostMapping("/{holderId}/createDependent")
-    public ResponseEntity<PartnerRequestDTO> createDependent(@PathVariable Long holderId, @RequestBody PartnerRequestDTO dto) {
-        Partner created = service.createDependent(holderId, dto);
-        URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(created.getId())
-                .toUri();
-        return ResponseEntity.created(uri).build();
+    public ResponseEntity<Void> createDependent(
+            @PathVariable Long holderId,
+            @RequestBody PartnerRequestDTO dto
+    ) {
+        service.createDependent(holderId, dto);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")

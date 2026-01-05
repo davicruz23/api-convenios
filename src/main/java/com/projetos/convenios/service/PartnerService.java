@@ -5,6 +5,7 @@ import com.projetos.convenios.domain.Partner;
 import com.projetos.convenios.domain.dto.partner.HolderWithPartnersDTO;
 import com.projetos.convenios.domain.dto.partner.PartnerRequestDTO;
 import com.projetos.convenios.repository.PartnerRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -49,7 +50,8 @@ public class PartnerService {
         return repository.save(holder);
     }
 
-    public Partner createDependent(Long holderId, PartnerRequestDTO dto) {
+    @Transactional
+    public void createDependent(Long holderId, PartnerRequestDTO dto) {
 
         Partner holder = repository.findById(holderId)
                 .orElseThrow(() -> new RuntimeException("Holder not found"));
@@ -58,19 +60,21 @@ public class PartnerService {
             throw new RuntimeException("Partner is not a holder");
         }
 
-        long dependentsCount = repository.countByHolderId(holderId);
-
-        if (dependentsCount >= 4) {
-            throw new RuntimeException("Titular com máximo de dependentes (4)");
+        long count = repository.countByHolderId(holderId);
+        if (count >= 4) {
+            throw new RuntimeException("Titular pode ter no máximo 4 dependentes");
         }
 
-        Address address = new Address();
-        address.setStreet(dto.getAddress().getStreet());
-        address.setHouseNumber(dto.getAddress().getHouseNumber());
-        address.setCity(dto.getAddress().getCity());
-        address.setState(dto.getAddress().getState());
-        address.setZip(dto.getAddress().getZip());
-        address.setCountry(dto.getAddress().getCountry());
+        Address address = null;
+        if (dto.getAddress() != null) {
+            address = new Address();
+            address.setStreet(dto.getAddress().getStreet());
+            address.setHouseNumber(dto.getAddress().getHouseNumber());
+            address.setCity(dto.getAddress().getCity());
+            address.setState(dto.getAddress().getState());
+            address.setZip(dto.getAddress().getZip());
+            address.setCountry(dto.getAddress().getCountry());
+        }
 
         Partner dependent = new Partner();
         dependent.setName(dto.getName());
@@ -80,7 +84,7 @@ public class PartnerService {
         dependent.setHolder(holder);
         dependent.setAddress(address);
 
-        return repository.save(dependent);
+        repository.save(dependent);
     }
 
     public HolderWithPartnersDTO findHolderWithDependents(Long holderId) {
@@ -113,5 +117,9 @@ public class PartnerService {
 
     public void delete(Long id) {
         repository.deleteById(id);
+    }
+
+    public List<Partner> findByIsHolderTrue() {
+        return repository.findByIsHolderTrue();
     }
 }

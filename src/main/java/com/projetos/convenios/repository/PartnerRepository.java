@@ -25,4 +25,6 @@ public interface PartnerRepository extends JpaRepository<Partner, Long> {
 
     List<Partner> findByHolder(Partner holder);
 
+    List<Partner> findByIsHolderTrue();
+
 }
