@@ -29,7 +29,7 @@ public class PartnerCompanyController {
                         .toList());
     }
 
-    @PostMapping
+    @PostMapping("/create-company")
     public ResponseEntity<PartnerCompanyRequestDTO> create(@RequestBody PartnerCompanyRequestDTO dto) {
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{id}").buildAndExpand(service.create(dto).getId()).toUri();
