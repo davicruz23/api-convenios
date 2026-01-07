@@ -19,6 +19,8 @@ public class PartnerCompany {
     private String cnpj;
     private String phone;
     private Integer discountMax;
+    private String email;
+    private String password;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id") // FK AQUI
