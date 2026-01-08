@@ -4,11 +4,15 @@ import com.projetos.convenios.domain.Address;
 import com.projetos.convenios.domain.Partner;
 import com.projetos.convenios.domain.dto.partner.HolderWithPartnersDTO;
 import com.projetos.convenios.domain.dto.partner.PartnerRequestDTO;
+import com.projetos.convenios.domain.dto.partner.PartnerSearchResponseDTO;
 import com.projetos.convenios.repository.PartnerRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -122,4 +126,30 @@ public class PartnerService {
     public List<Partner> findByIsHolderTrue() {
         return repository.findByIsHolderTrue();
     }
+
+    public List<PartnerSearchResponseDTO> searchAutocomplete(String query) {
+
+        Pageable pageable = PageRequest.of(0, 10);
+        LocalDate today = LocalDate.now();
+
+        return repository.searchAutocomplete(query, pageable)
+                .stream()
+                .map(dto -> {
+
+                    boolean valido =
+                            dto.getExpirationDate() != null &&
+                                    !dto.getExpirationDate().isBefore(today);
+
+                    return new PartnerSearchResponseDTO(
+                            dto.getId(),
+                            dto.getName(),
+                            dto.getCpf(),
+                            dto.getIsHolder(),
+                            dto.getExpirationDate(),
+                            valido ? "VALIDO" : "EXPIRADO"
+                    );
+                })
+                .toList();
+    }
+
 }

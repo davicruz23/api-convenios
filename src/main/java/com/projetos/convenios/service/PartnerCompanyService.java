@@ -1,19 +1,29 @@
 package com.projetos.convenios.service;
 
 import com.projetos.convenios.domain.Address;
+import com.projetos.convenios.domain.PartnerAccessToken;
 import com.projetos.convenios.domain.PartnerCompany;
 import com.projetos.convenios.domain.dto.partnerCompany.PartnerCompanyRequestDTO;
+import com.projetos.convenios.repository.PartnerAccessTokenRepository;
 import com.projetos.convenios.repository.PartnerCompanyRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class PartnerCompanyService {
 
     private final PartnerCompanyRepository repository;
+    private final PartnerAccessTokenRepository tokenRepository;
+    private final EmailService emailService;
 
     public PartnerCompany create(PartnerCompanyRequestDTO dto) {
 
@@ -25,14 +35,25 @@ public class PartnerCompanyService {
         address.setZip(dto.getAddress().getZip());
         address.setCountry(dto.getAddress().getCountry());
 
-        PartnerCompany entity = new PartnerCompany();
-        entity.setName(dto.getName());
-        entity.setCnpj(dto.getCnpj());
-        entity.setPhone(dto.getPhone());
-        entity.setDiscountMax(dto.getMaxDiscount());
-        entity.setAddress(address);
+        PartnerCompany company = new PartnerCompany();
+        company.setName(dto.getName());
+        company.setCnpj(dto.getCnpj());
+        company.setPhone(dto.getPhone());
+        company.setDiscountMax(dto.getMaxDiscount());
+        company.setEmail(dto.getEmail());
+        company.setAddress(address);
 
-        return repository.save(entity);
+        PartnerCompany savedCompany = repository.save(company);
+
+        PartnerAccessToken accessToken = new PartnerAccessToken();
+        accessToken.setCompany(savedCompany);
+        tokenRepository.save(accessToken);
+
+        String link = "http://localhost:4200/partner/access?token=" + accessToken.getToken();
+
+        emailService.sendPartnerAccessEmail(dto.getEmail(), link);
+
+        return savedCompany;
     }
 
     public List<PartnerCompany> findAll() {

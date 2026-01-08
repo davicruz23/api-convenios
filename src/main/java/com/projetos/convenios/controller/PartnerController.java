@@ -6,6 +6,7 @@ import com.projetos.convenios.domain.Partner;
 import com.projetos.convenios.domain.dto.partner.HolderWithPartnersDTO;
 import com.projetos.convenios.domain.dto.partner.PartnerRequestDTO;
 import com.projetos.convenios.domain.dto.partner.PartnerResponseDTO;
+import com.projetos.convenios.domain.dto.partner.PartnerSearchResponseDTO;
 import com.projetos.convenios.domain.dto.partnerCompany.PartnerCompanyRequestDTO;
 import com.projetos.convenios.domain.dto.partnerCompany.PartnerCompanyResponseDTO;
 import com.projetos.convenios.service.PartnerService;
@@ -67,4 +68,12 @@ public class PartnerController {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/search")
+    public List<PartnerSearchResponseDTO> search(
+            @RequestParam(required = false, defaultValue = "") String q
+    ) {
+        return service.searchAutocomplete(q);
+    }
+
 }

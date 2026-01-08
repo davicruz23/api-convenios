@@ -27,4 +27,7 @@ public class Partner {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id") // FK AQUI
     private Address address;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private AgreementCard agreementCard;
 }

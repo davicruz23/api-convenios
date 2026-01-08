@@ -18,4 +18,9 @@ public class PartnerCompanyResponseDTO {
     private String phone;
     private Integer maxDiscount;
     private AddressDTO address;
+
+    public PartnerCompanyResponseDTO(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

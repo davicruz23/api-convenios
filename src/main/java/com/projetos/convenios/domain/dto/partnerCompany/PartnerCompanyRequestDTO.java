@@ -18,4 +18,5 @@ public class PartnerCompanyRequestDTO {
     private String phone;
     private Integer maxDiscount;
     private AddressDTO address;
+    private String email;
 }
