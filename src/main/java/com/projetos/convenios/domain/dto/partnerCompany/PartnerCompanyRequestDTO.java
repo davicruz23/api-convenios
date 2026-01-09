@@ -19,4 +19,5 @@ public class PartnerCompanyRequestDTO {
     private Integer maxDiscount;
     private AddressDTO address;
     private String email;
+    private String password;
 }

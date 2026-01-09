@@ -34,16 +34,10 @@ public class AuthService {
         PartnerCompany company = repository
                 .findByEmail(dto.getEmail());
 
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("companyId", company.getId());
-        claims.put("companyName", company.getName());
-
-        String token = jwtService.generateToken(claims, company.getEmail());
+        String token = jwtService.generateToken(company);
 
         return new LoginResponseDTO(
-                token,
-                company.getId(),
-                company.getName()
+                token
         );
     }
 }

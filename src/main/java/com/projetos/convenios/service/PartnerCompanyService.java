@@ -8,6 +8,7 @@ import com.projetos.convenios.repository.PartnerAccessTokenRepository;
 import com.projetos.convenios.repository.PartnerCompanyRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -24,6 +25,7 @@ public class PartnerCompanyService {
     private final PartnerCompanyRepository repository;
     private final PartnerAccessTokenRepository tokenRepository;
     private final EmailService emailService;
+    private final PasswordEncoder passwordEncoder;
 
     public PartnerCompany create(PartnerCompanyRequestDTO dto) {
 
@@ -41,19 +43,19 @@ public class PartnerCompanyService {
         company.setPhone(dto.getPhone());
         company.setDiscountMax(dto.getMaxDiscount());
         company.setEmail(dto.getEmail());
+        company.setActive(true);
+        company.setPassword(passwordEncoder.encode(dto.getPassword()));
         company.setAddress(address);
 
-        PartnerCompany savedCompany = repository.save(company);
+        //        PartnerAccessToken accessToken = new PartnerAccessToken();
+//        accessToken.setCompany(savedCompany);
+//        tokenRepository.save(accessToken);
+//
+//        String link = "http://localhost:4200/partner/access?token=" + accessToken.getToken();
+//
+//        emailService.sendPartnerAccessEmail(dto.getEmail(), link);
 
-        PartnerAccessToken accessToken = new PartnerAccessToken();
-        accessToken.setCompany(savedCompany);
-        tokenRepository.save(accessToken);
-
-        String link = "http://localhost:4200/partner/access?token=" + accessToken.getToken();
-
-        emailService.sendPartnerAccessEmail(dto.getEmail(), link);
-
-        return savedCompany;
+        return repository.save(company);
     }
 
     public List<PartnerCompany> findAll() {

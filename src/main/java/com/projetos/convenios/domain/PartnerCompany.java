@@ -17,6 +17,7 @@ public class PartnerCompany {
     private String name;
     private String cnpj;
     private String phone;
+    private int roleId;
     private Integer discountMax;
     private String email;
     private String password;
