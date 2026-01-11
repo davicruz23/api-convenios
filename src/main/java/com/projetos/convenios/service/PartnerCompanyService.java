@@ -4,6 +4,7 @@ import com.projetos.convenios.domain.Address;
 import com.projetos.convenios.domain.PartnerAccessToken;
 import com.projetos.convenios.domain.PartnerCompany;
 import com.projetos.convenios.domain.dto.partnerCompany.PartnerCompanyRequestDTO;
+import com.projetos.convenios.enums.UserRoles;
 import com.projetos.convenios.repository.PartnerAccessTokenRepository;
 import com.projetos.convenios.repository.PartnerCompanyRepository;
 import jakarta.transaction.Transactional;
@@ -44,6 +45,7 @@ public class PartnerCompanyService {
         company.setDiscountMax(dto.getMaxDiscount());
         company.setEmail(dto.getEmail());
         company.setActive(true);
+        company.setRoleId(UserRoles.COMPANY.getValue());
         company.setPassword(passwordEncoder.encode(dto.getPassword()));
         company.setAddress(address);
 

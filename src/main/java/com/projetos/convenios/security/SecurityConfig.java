@@ -32,11 +32,14 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
+                .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
+
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         .requestMatchers(
                                 "/api/auth/**",
@@ -55,6 +58,7 @@ public class SecurityConfig {
         return http.build();
     }
 
+
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration configuration
@@ -63,18 +67,18 @@ public class SecurityConfig {
     }
 
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:4200"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("*"));
-        config.setAllowCredentials(true);
+        @Bean
+        public CorsConfigurationSource corsConfigurationSource() {
+            CorsConfiguration config = new CorsConfiguration();
+            config.setAllowedOrigins(List.of("http://localhost:4200"));
+            config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+            config.setAllowedHeaders(List.of("*"));
+            config.setAllowCredentials(true);
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return source;
-    }
+            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+            source.registerCorsConfiguration("/**", config);
+            return source;
+        }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

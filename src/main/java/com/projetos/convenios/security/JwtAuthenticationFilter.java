@@ -38,10 +38,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = authHeader.substring(7);
 
-        // valida token e extrai subject (email)
         String subject = jwtService.validateToken(token);
 
-        if (subject.isEmpty()) {
+        if (subject == null || subject.isBlank()) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -68,3 +67,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 }
+

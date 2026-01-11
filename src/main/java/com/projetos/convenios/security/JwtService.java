@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.projetos.convenios.domain.PartnerCompany;
+import com.projetos.convenios.enums.UserRoles;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +19,10 @@ public class JwtService {
     @Value("${api.security.token.secret}")
     private String secret;
 
-    private static final String ISSUER = "api-convenios-partner";
+    private static final String ISSUER = "api-convenios";
 
-    public String generateToken(PartnerCompany company) {
+
+    public String generateCompanyToken(PartnerCompany company) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
 
@@ -28,14 +30,32 @@ public class JwtService {
                     .withIssuer(ISSUER)
                     .withSubject(company.getEmail())
                     .withClaim("companyName", company.getName())
-                    .withClaim("role", "ROLE_PARTNER")
+                    .withClaim("role", "ROLE_" + UserRoles.fromValue(company.getRoleId()))
                     .withExpiresAt(genExpirationDate())
                     .sign(algorithm);
 
         } catch (JWTCreationException ex) {
-            throw new RuntimeException("Error while generating partner token", ex);
+            throw new RuntimeException("Error while generating company token", ex);
         }
     }
+
+    public String generateAdminToken(String email) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+
+            return JWT.create()
+                    .withIssuer(ISSUER)
+                    .withSubject(email)
+                    .withClaim("role", "ROLE_ADMIN")
+                    .withClaim("nome", "Administrador")
+                    .withExpiresAt(genExpirationDate())
+                    .sign(algorithm);
+
+        } catch (JWTCreationException ex) {
+            throw new RuntimeException("Error while generating admin token", ex);
+        }
+    }
+
 
     public String validateToken(String token) {
         try {
@@ -61,17 +81,6 @@ public class JwtService {
                 .verify(token)
                 .getClaim("role")
                 .asString();
-    }
-
-    public Long extractCompanyId(String token) {
-        Algorithm algorithm = Algorithm.HMAC256(secret);
-
-        return JWT.require(algorithm)
-                .withIssuer(ISSUER)
-                .build()
-                .verify(token)
-                .getClaim("companyId")
-                .asLong();
     }
 
     private Instant genExpirationDate() {
