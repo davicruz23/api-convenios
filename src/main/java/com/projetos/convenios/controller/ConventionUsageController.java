@@ -1,5 +1,6 @@
 package com.projetos.convenios.controller;
 
+import com.projetos.convenios.domain.dto.conventionUsage.ConventionUsageDTO;
 import com.projetos.convenios.service.ConventionUsageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +16,18 @@ public class ConventionUsageController {
 
     private final ConventionUsageService service;
 
-    @PostMapping("/apply")
-    public ResponseEntity<Integer> applyDiscount(@RequestParam Long partnerId, @RequestParam Long companyId) {
+    @PostMapping("/calculate")
+    public ResponseEntity<Integer> calculate(ConventionUsageDTO dto) {
 
-        int discount = service.applyDiscount(partnerId, companyId);
+        int discount = service.calculateDiscount(dto);
         return ResponseEntity.ok(discount);
+    }
+
+    @PostMapping("/confirm")
+    public ResponseEntity<Void> confirm( ConventionUsageDTO dto) {
+
+        service.confirmDiscount(dto);
+        return ResponseEntity.ok().build();
     }
 }
 

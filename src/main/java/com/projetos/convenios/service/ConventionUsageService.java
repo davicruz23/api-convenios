@@ -4,6 +4,7 @@ import com.projetos.convenios.domain.ConventionUsage;
 import com.projetos.convenios.domain.DiscountCalculator;
 import com.projetos.convenios.domain.Partner;
 import com.projetos.convenios.domain.PartnerCompany;
+import com.projetos.convenios.domain.dto.conventionUsage.ConventionUsageDTO;
 import com.projetos.convenios.repository.ConventionUsageRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,28 +21,32 @@ public class ConventionUsageService {
     private final PartnerCompanyService partnerCompanyService;
     private final ConventionUsageRepository repository;
 
-    @Transactional
-    public int applyDiscount(Long partnerId, Long companyId) {
+    public int calculateDiscount(ConventionUsageDTO dto) {
 
-        if (!cardService.isValid(partnerId)) {
+        if (!cardService.isValid(dto.getPartnerId())) {
             throw new RuntimeException("Invalid agreement card");
         }
 
-        Partner partner = partnerService.findById(partnerId);
+        PartnerCompany company = partnerCompanyService.findById(dto.getCompanyId());
 
-        PartnerCompany company = partnerCompanyService.findById(companyId);
+        return DiscountCalculator.calculate(company.getDiscountMax());
+    }
 
-        int discount = DiscountCalculator.calculate(company.getDiscountMax());
+    @Transactional
+    public void confirmDiscount(ConventionUsageDTO dto) {
+
+        Partner partner = partnerService.findById(dto.getPartnerId());
+        PartnerCompany company = partnerCompanyService.findById(dto.getCompanyId());
 
         ConventionUsage usage = new ConventionUsage();
         usage.setPartner(partner);
         usage.setPartnerCompany(company);
         usage.setUsedAt(LocalDateTime.now());
-        usage.setDiscountApplied(discount);
+        usage.setProcedureName(dto.getProcedureName());
+        usage.setDiscountApplied(dto.getDiscount());
 
         repository.save(usage);
-
-        return discount;
     }
 }
+
 

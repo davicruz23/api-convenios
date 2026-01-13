@@ -18,6 +18,7 @@ public class ConventionUsage {
     private Long id;
     private LocalDateTime usedAt;
     private Integer discountApplied;
+    private String procedureName;
 
     @ManyToOne(fetch = FetchType.LAZY,  cascade = CascadeType.ALL)
     private Partner partner;

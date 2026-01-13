@@ -29,6 +29,7 @@ public class JwtService {
             return JWT.create()
                     .withIssuer(ISSUER)
                     .withSubject(company.getEmail())
+                    .withClaim("companyId", company.getId())
                     .withClaim("companyName", company.getName())
                     .withClaim("role", "ROLE_" + UserRoles.fromValue(company.getRoleId()))
                     .withExpiresAt(genExpirationDate())
